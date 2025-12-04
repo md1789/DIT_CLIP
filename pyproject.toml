@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dit-clip-research"
+version = "0.1.0"
+description = "Research repo for Diffusion Transformers (DiT) with CLIP-based conditioning."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Research Maintainer"}]
+license = {text = "MIT"}
+keywords = ["diffusion", "transformers", "DiT", "CLIP", "generative models"]
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "einops>=0.6",
+    "numpy>=1.24",
+    "tqdm>=4.66",
+    "PyYAML>=6.0",
+    "open-clip-torch>=2.24.0",
+    "pillow>=9.0",
+    "pandas>=1.5",
+    "requests>=2.31"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytorch-fid>=0.2.1",
+    "matplotlib>=3.7",
+    "jupyter>=1.0",
+    "ipykernel>=6.26"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}

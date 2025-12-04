@@ -1,0 +1,28 @@
+training:
+  epochs: 5
+  batch_size: 32
+  learning_rate: 2.0e-4
+  dataset: custom
+  data_root: ./data/custom_images
+  annotations: ./data/custom_images/metadata.csv
+  image_size: 64
+  patch_size: 4
+  hidden_size: 512
+  depth: 12
+  num_heads: 8
+  mlp_ratio: 4.0
+  use_clip_conditioning: true
+  clip_model_name: ViT-B-32
+  clip_pretrained: laion2b_s34b_b79k
+  clip_embed_dim: 512
+  num_workers: 8
+  save_dir: ./experiments/custom_dataset_clip/checkpoints
+  log_every: 50
+  save_every: 1
+  seed: 1234
+
+diffusion:
+  timesteps: 1000
+  beta_start: 0.0001
+  beta_end: 0.02
+  schedule: cosine

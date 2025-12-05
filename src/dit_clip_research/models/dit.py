@@ -200,3 +200,9 @@ class DiT(nn.Module):
         cond = self.t_embedder(t)
         if self.clip_proj is not None and clip_text is not None:
             cond = cond + self.clip_proj(clip_text)
+
+        for block in self.blocks:
+            x = block(x, cond)
+
+        x = self.final_layer(x, cond)
+        return self.unpatchify(x)

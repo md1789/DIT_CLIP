@@ -64,7 +64,7 @@ def train_one_epoch(
     model.train()
     loss_meter = AverageMeter()
 
-    for batch in tqdm(dataloader, desc="train", leave=False):
+    for step, batch in enumerate(tqdm(dataloader, desc="train", leave=False)):
         images = batch["image"].to(device)
         t = torch.randint(0, schedule.config.timesteps, (images.size(0),), device=device)
         noise = torch.randn_like(images)
@@ -72,6 +72,19 @@ def train_one_epoch(
 
         clip_cond = maybe_encode_text(batch, clip_encoder, device)
         pred_noise = model(x_noisy, t, clip_text=clip_cond)
+
+        # Defensive debug: catch None/shape mismatches early.
+        if pred_noise is None or noise is None:
+            raise ValueError(
+                f"pred_noise or noise is None (step {step}); "
+                f"pred_noise={type(pred_noise)}, noise={type(noise)}, "
+                f"clip_cond={None if clip_cond is None else clip_cond.shape}"
+            )
+        if pred_noise.shape != noise.shape:
+            raise ValueError(
+                f"Shape mismatch at step {step}: pred_noise {pred_noise.shape} vs noise {noise.shape}; "
+                f"x_noisy {x_noisy.shape}, images {images.shape}"
+            )
 
         loss = F.mse_loss(pred_noise, noise)
         optimizer.zero_grad()

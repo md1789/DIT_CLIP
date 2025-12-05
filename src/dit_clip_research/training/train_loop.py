@@ -89,6 +89,7 @@ def train_one_epoch(
         loss = F.mse_loss(pred_noise, noise)
         optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
 
         loss_meter.update(loss.item(), n=images.size(0))

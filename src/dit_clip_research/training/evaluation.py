@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 import torch
+import torch.nn.functional as F
 from torchvision.utils import make_grid
 
 from dit_clip_research.models.clip_conditioning import ClipTextEncoder
@@ -39,6 +40,14 @@ def make_sample_grid(tensor: torch.Tensor, nrow: int = 4, denorm: bool = True) -
     if denorm:
         tensor = denormalize(tensor)
     return make_grid(tensor.clamp(-1, 1), nrow=nrow)
+
+
+def upscale_grid(grid: torch.Tensor, factor: int = 1, mode: str = "nearest") -> torch.Tensor:
+    """Optionally upsample a CHW grid tensor for visualization."""
+
+    if factor <= 1:
+        return grid
+    return F.interpolate(grid.unsqueeze(0), scale_factor=factor, mode=mode).squeeze(0)
 
 
 # Placeholder for FID hook; left as a stub for future extension.
